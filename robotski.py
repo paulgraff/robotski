@@ -46,8 +46,8 @@ def get_phrase():
         with open(r'robotski.pkl', 'r') as robotski_pickle:
             robotski_list = cPickle.load(robotski_pickle)
             return random.choice(robotski_list)
-    except 'SomeError':    
-	print '''I dont think that this file exists.
+    except 'SomeError':
+        print '''I dont think that this file exists.
                 try running robotski_generator.py'''
 
 
@@ -88,7 +88,6 @@ if __name__ == '__main__':
     status = get_recent_status()
     should_create_tweet = check_unique_tweet(status)
     if (should_create_tweet):
-	print 'heyfsdfs'
         status_text = get_status_text(status)
         status_id = get_status_id(status)
         phrase = get_phrase()
@@ -96,5 +95,5 @@ if __name__ == '__main__':
         set_log(robotskified, status_id)
         post_status(robotskified)
     else:
-	print 'There wasnt a new tweet!'
+        print 'There wasnt a new tweet!'
 
