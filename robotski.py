@@ -1,9 +1,12 @@
+#!/usr/bin/python
 
 import csv
 import cPickle
 from collections import namedtuple
 import tweepy
 import random
+import urllib2
+import json
 
 import twitter_keys as tk
 
@@ -19,9 +22,9 @@ def get_api():
 
 
 def get_recent_status():
-    api = get_api()
-    timeline = api.user_timeline(screen_name=tk._SCREEN_NAME, include_rts=True)
-    return timeline[0]
+    target_url = 'https://api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=true&screen_name={0}&count=1'.format(tk._SCREEN_NAME)
+    result = json.load(urllib2.urlopen(target_url))
+    return result[0]
 
 
 def post_status(status):
@@ -43,22 +46,22 @@ def get_phrase():
         with open(r'robotski.pkl', 'r') as robotski_pickle:
             robotski_list = cPickle.load(robotski_pickle)
             return random.choice(robotski_list)
-    except IOError:
-        print '''I dont think that this file exists.
+    except 'SomeError':    
+	print '''I dont think that this file exists.
                 try running robotski_generator.py'''
 
 
 def get_status_text(status):
-    return unicode(status.text)
+    return unicode(status.get('text', 'No message'))
 
 
 def get_status_id(status):
-    return unicode(status.id)
+    return unicode(status.get('id', '0'))
 
 
 def check_unique_tweet(status):
     log = get_log()
-    return len(log) == 0 or log[0].id != status.id
+    return len(log) == 0 or log[0].id != status.get('id', '0')
 
 
 def set_log(status, id):
@@ -85,10 +88,13 @@ if __name__ == '__main__':
     status = get_recent_status()
     should_create_tweet = check_unique_tweet(status)
     if (should_create_tweet):
+	print 'heyfsdfs'
         status_text = get_status_text(status)
         status_id = get_status_id(status)
         phrase = get_phrase()
         robotskified = translate_status(phrase, status_text)
         set_log(robotskified, status_id)
         post_status(robotskified)
+    else:
+	print 'There wasnt a new tweet!'
 
