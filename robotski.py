@@ -27,6 +27,15 @@ def get_recent_status():
     return result[0]
 
 
+def friend_followers():
+    api = get_api()
+    followers = api.followers_ids(screen_name='robotski')
+    friends = set(api.friends_ids(screen_name='robotski'))
+    for person in followers:
+        if person not in friends:
+            api.create_friendship(user_id=person, follow=True)
+
+
 def post_status(status):
     api = get_api()
     api.update_status(status=status)
@@ -86,6 +95,7 @@ def get_log():
 
 if __name__ == '__main__':
     status = get_recent_status()
+    friend_followers()
     should_create_tweet = check_unique_tweet(status)
     if (should_create_tweet):
         status_text = get_status_text(status)
