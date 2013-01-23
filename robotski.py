@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import csv
+import codecs
 import cPickle
 from collections import namedtuple
 import tweepy
@@ -76,7 +77,7 @@ def check_unique_tweet(status):
 def set_log(status, id):
     #todo append to top of file
     try:
-        with open(r'robotski_log.txt', 'w') as csv_log:
+        with codecs.open(r'robotski_log.txt', 'w', 'utf-8') as csv_log:
             csv_log.write(status + " | " + id)
     except IOError:
         print 'Writing to the log didnt work!'
@@ -85,7 +86,7 @@ def set_log(status, id):
 def get_log():
     result = []
     try:
-        with open(r'robotski_log.txt', 'r') as csv_log:
+        with codecs.open(r'robotski_log.txt', 'r', 'utf-8') as csv_log:
             reader = csv.reader(csv_log, delimiter='|', quotechar='|')
             line = reader.next()
             result.append(StatusTuple(unicode(line[0]), int(line[1])))
