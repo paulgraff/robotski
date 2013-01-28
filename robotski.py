@@ -1,6 +1,5 @@
 #!/usr/bin/python
 
-import csv
 import codecs
 import cPickle
 from collections import namedtuple
@@ -30,8 +29,8 @@ def get_recent_status():
 
 def friend_followers():
     api = get_api()
-    followers = api.followers_ids(screen_name='robotski')
-    friends = set(api.friends_ids(screen_name='robotski'))
+    followers = api.followers_ids(screen_name=tk._SCREEN_NAME)
+    friends = set(api.friends_ids(screen_name=tk._SCREEN_NAME))
     for person in followers:
         if person not in friends:
             api.create_friendship(user_id=person, follow=True)
@@ -87,11 +86,11 @@ def get_log():
     result = []
     try:
         with codecs.open(r'robotski_log.txt', 'r', 'utf-8') as csv_log:
-            reader = csv.reader(csv_log, delimiter='|', quotechar='|')
-            line = reader.next()
-            result.append(StatusTuple(unicode(line[0]), int(line[1])))
+            for line in csv_log:
+                row = line.split('|')
+                result.append(StatusTuple(unicode(row[0]), int(row[1])))
     except IOError:
-        pass
+        print "Couldn't read from the log"
     return result
 
 if __name__ == '__main__':
