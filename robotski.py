@@ -29,8 +29,8 @@ def get_recent_status():
 
 def friend_followers():
     api = get_api()
-    followers = api.followers_ids(screen_name=tk._SCREEN_NAME)
-    friends = set(api.friends_ids(screen_name=tk._SCREEN_NAME))
+    followers = api.followers_ids(screen_name=tk._BOT_NAME)
+    friends = set(api.friends_ids(screen_name=tk._BOT_NAME))
     for person in followers:
         if person not in friends:
             api.create_friendship(user_id=person, follow=True)
