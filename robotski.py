@@ -84,8 +84,7 @@ def get_log():
     result = []
     try:
         with codecs.open(r'robotski_log.txt', 'r', 'utf-8') as csv_log:
-            for line in csv_log:
-                row = line.split('|')
+                row = csv_log.read().split('|')
                 result.append(StatusTuple(unicode(row[0]), int(row[1])))
     except IOError:
         print "Couldn't read from the log"
