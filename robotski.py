@@ -10,25 +10,23 @@ import json
 
 import twitter_keys as tk
 
-auth = tweepy.OAuthHandler(tk._CONSUMER_KEY, tk._CONSUMER_SECRET)
-auth.set_access_token(tk._ACCESS_KEY, tk._ACCESS_SECRET)
-_api = tweepy.API(auth)
-
 StatusTuple = namedtuple('StatusTuple', 'text, id')
 
 
-def get_api():
-    return _api
+def get_api(consumer_key, consumer_secret, access_key, access_secret):
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_key, access_secret)
+    return tweepy.API(auth)
 
 
 def get_recent_status():
-    target_url = 'https://api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=true&screen_name={0}&count=1'.format(tk._SCREEN_NAME)
-    result = json.load(urllib2.urlopen(target_url))
-    return result[0]
+    api = get_api(tk._CONSUMER_KEY_CONSUMER, tk._CONSUMER_SECRET_CONSUMER, tk._ACCESS_KEY_CONSUMER, tk._ACCESS_SECRET_CONSUMER)
+    timeline = api.user_timeline(screen_name=tk._SCREEN_NAME, include_rts=True)
+    return timeline[0]
 
 
 def friend_followers():
-    api = get_api()
+    api = get_api(tk._CONSUMER_KEY_BOT, tk._CONSUMER_SECRET_BOT, tk._ACCESS_KEY_BOT, tk._ACCESS_SECRET_BOT)
     followers = api.followers_ids(screen_name=tk._BOT_NAME)
     friends = set(api.friends_ids(screen_name=tk._BOT_NAME))
     for person in followers:
@@ -37,7 +35,7 @@ def friend_followers():
 
 
 def post_status(status):
-    api = get_api()
+    api = get_api(tk._CONSUMER_KEY_BOT, tk._CONSUMER_SECRET_BOT, tk._ACCESS_KEY_BOT, tk._ACCESS_SECRET_BOT)
     api.update_status(status=status)
     print 'Current Status: ' + status
 
