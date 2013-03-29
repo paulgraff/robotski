@@ -59,16 +59,16 @@ def get_phrase():
 
 
 def get_status_text(status):
-    return unicode(status.get('text', 'No message'))
+    return unicode(status.text)
 
 
 def get_status_id(status):
-    return unicode(status.get('id', '0'))
+    return unicode(status.id)
 
 
 def check_unique_tweet(status):
     log = get_log()
-    return len(log) == 0 or log[0].id != status.get('id', '0')
+    return len(log) == 0 or log[0].id != status.id
 
 
 def set_log(status, id):
@@ -102,5 +102,5 @@ if __name__ == '__main__':
         set_log(robotskified, status_id)
         post_status(robotskified)
     else:
-        print 'There wasnt a new tweet!'
+        print 'There wasn\'t a new tweet!'
 
